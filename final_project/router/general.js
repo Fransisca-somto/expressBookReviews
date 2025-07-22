@@ -7,37 +7,67 @@ const public_users = express.Router();
 
 public_users.post("/register", (req,res) => {
   //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  // const {username, password} = req.body;
+  const username = req.body.username;
+  const password = req.body.password;
+  let newUser = {
+    "username": username,
+    "password": password
+  }
+  users.push(newUser)
+  console.log(users)
+  return res.status(200).json({message: "New user successfully created"});
 });
 
 // Get the book list available in the shop
-public_users.get('/',function (req, res) {
+public_users.get('/',async function (req, res) {
   //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  return await res.send(JSON.stringify({books}, null, 4));
+  //return res.status(300).json({message: "Yet to be implemented"});
 });
 
 // Get book details based on ISBN
-public_users.get('/isbn/:isbn',function (req, res) {
+public_users.get('/isbn/:isbn',async function (req, res) {
   //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  const isbn = req.params.isbn;
+  let specific_book = books[isbn];
+  return await res.send(JSON.stringify(specific_book, null, 4));
+  //return res.status(300).json({message: "Yet to be implemented"});
  });
   
 // Get book details based on author
-public_users.get('/author/:author',function (req, res) {
+public_users.get('/author/:author',async function (req, res) {
   //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  const author = req.params.author;
+  for (let i = 1; i < Object.entries(books).length; i++) {
+    if (books[i].author === author) {
+      let thebook = books[i];
+      return await res.send(JSON.stringify({thebook}, null, 4));
+    }
+  }
+  return res.status(300).json({message: "Book not in the shelve"});
 });
 
 // Get all books based on title
-public_users.get('/title/:title',function (req, res) {
+public_users.get('/title/:title',async function (req, res) {
   //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  const title = req.params.title;
+  for (let i = 1; i < Object.entries(books).length; i++) {
+    if (books[i].title === title) {
+      let thisbook = books[i]
+      return await res.send(JSON.stringify({thisbook}, null, 4))
+    }
+  }
+  return res.status(300).json({message: "Book not in the bookshelve"});
 });
 
 //  Get book review
-public_users.get('/review/:isbn',function (req, res) {
+public_users.get('/review/:isbn',async function (req, res) {
   //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  const isbn = req.params.isbn;
+  let bookReview = books[isbn].reviews
+
+  return await res.send(bookReview);
 });
 
 module.exports.general = public_users;
